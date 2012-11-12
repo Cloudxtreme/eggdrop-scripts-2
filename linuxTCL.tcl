@@ -29,8 +29,6 @@
 #  !package arch vlc
 #  > bot | https://www.archlinux.org/packages/?q=vlc
 #
-# --------------------------------------------------------------------------- #
-#
 # Search for wiki:
 #  !wiki <search term>
 #  !arch <Search term>
