@@ -79,7 +79,7 @@ if {[catch {package require Tcl 8.5}]} {
 namespace eval linuxTCL {
     # ------------------ Configuration  ------------------ #
     # Commands
-    variable linuxTCL_command_name {wiki arch gentoo ubuntu awesome package yubnub linuxhelp man}
+    variable linuxTCL_command_name {wiki arch gentoo ubuntu awesome package yubnub linuxhelp linux man}
     variable linuxTCL_command_flags "-|-"
     variable linuxTCL_command_char "!"
     variable script_name "linuxTCL"
@@ -115,6 +115,30 @@ proc ::linuxTCL::linuxhelp {nick uhost hand chan arg} {
 	message_method $::linuxTCL::helptype $nick $chan "!package <repo> <package> -=- Search packages"
 	message_method $::linuxTCL::helptype $nick $chan "Supported repos: arch, gentoo, ubuntu, debian, fedora, aur"
 	return 1
+}
+
+proc ::linuxTCL::linux {nick uhost hand chan arg} {
+	if {![channel get $chan linuxTCL]} { return }
+	if {$arg != "help"} {
+		message_method $::linuxTCL::querytype $nick $chan "try !linux help"
+		return 0
+	} else {
+		message_method $::linuxTCL::helptype $nick $chan "<*> Welcome to $chan's Linux search help menu $nick!"
+		message_method $::linuxTCL::helptype $nick $chan "<*> I'm $::botnick, your resident robot"
+		message_method $::linuxTCL::helptype $nick $chan "<*> Use one of the following public commands:"
+		message_method $::linuxTCL::helptype $nick $chan "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+		message_method $::linuxTCL::helptype $nick $chan "!arch <Search term> -=- Search Archlinux Wiki"
+		message_method $::linuxTCL::helptype $nick $chan "!gentoo <Search term> -=- Search gentoo Wiki"
+		message_method $::linuxTCL::helptype $nick $chan "!ubuntu <Search term> -=- Search Ubuntu Wiki"
+		message_method $::linuxTCL::helptype $nick $chan "!wiki <Search term> -=- Search Wikipedia"
+		message_method $::linuxTCL::helptype $nick $chan "!awesome <Search term> -=- Search AwesomeWM Wiki"
+		message_method $::linuxTCL::helptype $nick $chan "!yubnub <command> <Search term> -=- Web CLI"
+	    # http://yubnub.org/kernel/ls?args= Type in a command, or 'ls dictionary' to search all commands for 'dictionary', etc."
+		message_method $::linuxTCL::helptype $nick $chan "!man <Search term> -=- Search Man pages"
+		message_method $::linuxTCL::helptype $nick $chan "!package <repo> <package> -=- Search packages"
+		message_method $::linuxTCL::helptype $nick $chan "Supported repos: arch, gentoo, ubuntu, debian, fedora, aur"
+		return 1
+	}
 }
 
 proc ::linuxTCL::package {nick uhost hand chan arg} {
