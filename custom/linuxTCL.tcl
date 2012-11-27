@@ -75,12 +75,7 @@ if {[catch {package require Tcl 8.5}]} {
     putlog "linuxTCL : You need at least Tcl 8.5 to run this script."
     return
 }
-
-if {[catch {package require tls 1.6}]} {
-    putlog "linuxTCL : You need at least tls 1.6c to run this script."
-    return
-}
-
+ 
 namespace eval linuxTCL {
     # ------------------ Configuration  ------------------ #
     # Commands
@@ -96,8 +91,6 @@ namespace eval linuxTCL {
     variable versiontype "PRIVMSG"
     # -------------- Configuration ends here -------------- #
     variable version "0.0.2"
-	variable shortenState
-	::http::register https 443 [list ::tls::socket -require 0 -request 1]
     setudef flag linuxTCL
 }
 
@@ -226,8 +219,7 @@ proc ::linuxTCL::gentoo {nick uhost hand chan arg} {
 	    return 0
 	} else {
 		set clean [string map { " " "_" } $arg]
-		set link "http://en.gentoo-wiki.com/w/index.php?search=$clean"
-		set url [::linuxTCL::shortenUrl $link]
+		set url "http://en.gentoo-wiki.com/w/index.php?search=$clean"
 		set page [webdata $url]
 		if {$page == "timeout"} { 
 			message_method $::linuxTCL::querytype $nick $chan "URL has timed out. Please try again later."
@@ -337,39 +329,6 @@ proc ::linuxTCL::webdata {website} {
 	http::cleanup $token
 	if { [info exists data] } { return $data
 	} else { return geturl }
-}
-
-# callback for the url shortener http request
-proc ::linuxTCL::shortenUrlCallback {token} {
-        variable shortenState
-        lassign $shortenState($token)
-        upvar #0 $token state
-        if {$state(status) ne {ok}} {
-                putloglev d * "tcl http error: $state(status)"
-        } elseif {[::http::ncode $token] != 200} {
-                putloglev d * "tcl http error: [::http::ncode $token]"
-        } else {
-                if {![string match "http://is.gd/*" [set shortUrl [string trim $state(body)]]]} {
-                        putloglev d * "tcl url shortening failed, body is not a url"
-                } else {
-                       set data "\037\00307$shortUrl\003\037"
-                }
-        }
-        # clean up
-      #  unset shortenState($token)
-        ::http::cleanup $token
-        return $data
-}
-
-# shorten urls using is.gd
-proc ::linuxTCL::shortenUrl {url} {
-        variable shortenState
-        if {[catch {::http::geturl "http://is.gd/create.php?format=simple&url=$url" -timeout 10000 -command ::linuxTCL::shortenUrlCallback} result]} {
-                putloglev d * "tcl error while connecting to is.gd: $message"
-        } else {
-                set shortenState($result)
-        }
-        return
 }
 
 # make commands available
