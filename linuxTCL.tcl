@@ -98,7 +98,7 @@ namespace eval linuxTCL {
 #       W A R N I N G        DON'T Change anything below here        W A R N I N G       #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-proc ::linuxTCL::helpmenu{nick uhost hand chan arg} {
+proc ::linuxTCL::helpmenu {nick uhost hand chan arg} {
 	message_method $::linuxTCL::helptype $nick $chan "<*> Welcome to $chan's Linux search help menu $nick!"
 	message_method $::linuxTCL::helptype $nick $chan "<*> I'm $::botnick, your resident robot"
 	message_method $::linuxTCL::helptype $nick $chan "<*> Use one of the following public commands:"
